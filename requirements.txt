@@ -5,6 +5,7 @@ pandas
 numpy
 matplotlib
 seaborn
+fsspec==2022.11.0
 python-box==6.0.2
 pyYAML
 tqdm
