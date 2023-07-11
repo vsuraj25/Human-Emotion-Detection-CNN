@@ -1,0 +1,1 @@
+from Emotion_Detector.components.data_ingestion import DataIngestion

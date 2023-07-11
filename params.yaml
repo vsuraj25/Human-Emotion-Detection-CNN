@@ -1,1 +1,17 @@
-base : None
+CLASS_NAMES : ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"]
+
+RANDOM_SEED : 22
+
+BATCH_SIZE : 32
+IM_SIZE : 256
+LEARNING_RATE : 0.001
+EPOCHS : 5
+DROPOUT_RATE : 0.0
+REGULARIZATION_RATE : 0.0
+N_FILTERS : 6
+KERNAL_SIZE : 3
+N_STRIDES : 1
+POOL_SIZE : 2
+N_DENSE_1 : 100
+N_DENSE_2 : 10
+NUM_CLASSES : 7

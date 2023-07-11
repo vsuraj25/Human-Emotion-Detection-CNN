@@ -1,0 +1,1 @@
+from Emotion_Detector.config.configuration import ConfigurationManager
