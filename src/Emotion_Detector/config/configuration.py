@@ -17,10 +17,12 @@ class ConfigurationManager:
         config = self.config.data_ingestion
 
         create_directories([config.root_dir])
+        create_directories([config.local_data_dir])
 
         data_ingestion_config = DataIngestionConfig(
             root_dir = config.root_dir,
             source_url = config.source_url,
+            local_data_dir = config.local_data_dir,
             local_data_file = config.local_data_file,
             unzip_dir = config.unzip_dir
         )
