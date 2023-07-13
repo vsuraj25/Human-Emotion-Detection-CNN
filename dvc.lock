@@ -4,8 +4,8 @@ stages:
     cmd: python src/Emotion_Detector/pipeline/stage01_data_ingestion.py
     deps:
     - path: configs/config.yaml
-      md5: 8ec42270e59b590f449534f939b43a58
-      size: 333
+      md5: 6635758d5f9204afed9f1631bfeb04ef
+      size: 821
     - path: src/Emotion_Detector/pipeline/stage01_data_ingestion.py
       md5: 439da56c76bd08da5179a9a7bc86a67b
       size: 739
@@ -21,3 +21,32 @@ stages:
       md5: 06ac7dc0f0fdf83e3789a27f9d68360e.dir
       size: 45185869
       nfiles: 28709
+  data_preprocessing:
+    cmd: python src/Emotion_Detector/pipeline/stage02_data_preprocessing.py
+    deps:
+    - path: artifacts/data_ingestion/test
+      md5: 75809b672b10f68a6450816ccbdb7670.dir
+      size: 11324320
+      nfiles: 7178
+    - path: artifacts/data_ingestion/train
+      md5: 06ac7dc0f0fdf83e3789a27f9d68360e.dir
+      size: 45185869
+      nfiles: 28709
+    - path: configs/config.yaml
+      md5: 6635758d5f9204afed9f1631bfeb04ef
+      size: 821
+    - path: params.yaml
+      md5: 9fe4cebb1d20c2cb78a864050cb766cf
+      size: 531
+    - path: src/Emotion_Detector/pipeline/stage02_data_preprocessing.py
+      md5: 750d1b00c8c1b8f0417f6e3fff919916
+      size: 754
+    outs:
+    - path: artifacts/data_preprocessing/test_tfrecords
+      md5: 6b88d4e49272fc43ce4d636a2fba6ad6.dir
+      size: 472863362
+      nfiles: 5
+    - path: artifacts/data_preprocessing/train_tfrecords
+      md5: 85d796cc87412017f8b1c1cc659a2cc7.dir
+      size: 1884265420
+      nfiles: 10
