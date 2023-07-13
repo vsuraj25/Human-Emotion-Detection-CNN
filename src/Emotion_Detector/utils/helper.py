@@ -8,6 +8,8 @@ from ensure import ensure_annotations
 from box import ConfigBox
 from pathlib import Path
 from typing import Any
+import tensorflow as tf
+from tensorflow.train import BytesList, FloatList, Int64List, Example, Features, Feature
 
 
 @ensure_annotations
@@ -107,3 +109,40 @@ def get_size(path: Path) -> str:
     """
     size_in_kb = round(os.path.getsize(path)/1024)
     return f"~ {size_in_kb} KB"
+
+## Encoding the image as byte
+def image_to_byte_encoder(image, label):
+    image = tf.image.convert_image_dtype(image, dtype=tf.uint8)
+    image = tf.io.encode_jpeg(image)
+    return image, tf.argmax(label)
+
+
+
+def write_tf_records(NUM_SHARDS, encoded_data, path_to_write):
+
+    ## Serializing the image as bytes feature
+    def create_example(image, label):
+
+        bytes_feature = Feature(
+            bytes_list=BytesList(value=[image]))
+
+        int_feature = Feature(
+            int64_list=Int64List(value=[label]))
+
+        example = tf.train.Example(
+            features=Features(feature={
+                'images': bytes_feature,
+                'labels': int_feature,
+            }))
+        
+        return example.SerializeToString()
+    
+    for shard_number in range(NUM_SHARDS):
+        sharded_data = (
+            encoded_data.shard(NUM_SHARDS, shard_number).as_numpy_iterator()
+        )
+
+        with tf.io.TFRecordWriter(path_to_write.format(shard_number)) as file_writer:
+            for encoded_image, encoded_label in sharded_data:
+                example = create_example(encoded_image, encoded_label)
+                file_writer.write(example)
