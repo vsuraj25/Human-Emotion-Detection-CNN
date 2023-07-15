@@ -1,6 +1,6 @@
 from Emotion_Detector.utils import *
 from Emotion_Detector.constants import *
-from Emotion_Detector.entity.config_entity import (DataIngestionConfig, DataPreprocessingConfig)
+from Emotion_Detector.entity.config_entity import (DataIngestionConfig, DataPreprocessingConfig, ModelTrainingConfig)
 
 
 class ConfigurationManager:
@@ -57,3 +57,34 @@ class ConfigurationManager:
             param_random_contrast_factor = self.params.RANDOM_CONTRAST_FACTOR
         )
         return data_preprocessing_config
+    
+    def get_model_training_config(self) -> ModelTrainingConfig:
+        config = self.config.model_training
+
+
+        create_directories([config.root_dir])
+        create_directories([config.checkpoints_callback_dir])
+        create_directories([config.tensorboard_log_dir])
+        create_directories([config.model_history_dir])
+        create_directories([config.model_dir])
+
+        model_training_config = ModelTrainingConfig(
+            root_dir = Path(config.root_dir),
+            checkpoints_callback_dir = Path(config.checkpoints_callback_dir),
+            tensorboard_log_dir = Path(config.tensorboard_log_dir),
+            model_history_dir = Path(config.model_history_dir),
+            model_dir = Path(config.model_dir),
+            model_file_path =  config.model_file_path,
+            checkpoints_file_path = config.checkpoints_file_path,
+            model_history_file_path = Path(config.model_history_file_path),
+            train_tf_records_file_path = config.train_tf_records_file_path,
+            test_tf_records_file_path = config.test_tf_records_file_path,
+            param_image_size = self.params.IMAGE_SIZE,
+            param_learning_rate =  self.params.LEARNING_RATE,
+            param_epochs = self.params.EPOCHS,
+            param_train_num_shards = self.params.TRAIN_NUM_SHARDS,
+            param_test_num_shards = self.params.TEST_NUM_SHARDS,
+            param_batch_size = self.params.BATCH_SIZE,
+            all_params = self.params
+        )
+        return model_training_config
