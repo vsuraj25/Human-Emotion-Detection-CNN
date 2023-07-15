@@ -146,3 +146,27 @@ def write_tf_records(NUM_SHARDS, encoded_data, path_to_write):
             for encoded_image, encoded_label in sharded_data:
                 example = create_example(encoded_image, encoded_label)
                 file_writer.write(example)
+
+
+def reconstruct_data_from_tfrecords(path, num_shards, batch_size):
+
+    def parse_tfrecords(example):
+
+        feature_description = {
+            "images" : tf.io.FixedLenFeature([], tf.string),
+            "labels" : tf.io.FixedLenFeature([], tf.int64)
+        }
+        example = tf.io.parse_single_example(example, feature_description)
+        example['images'] = tf.image.convert_image_dtype(
+            tf.io.decode_jpeg(example["images"], channels = 3), dtype = tf.float32)
+
+        return example["images"], example["labels"]
+
+
+    recons_data = tf.data.TFRecordDataset(filenames= [path.format(p)  for p in range(num_shards)])
+
+    parsed_data = (recons_data.map(parse_tfrecords).batch(batch_size).prefetch(tf.data.AUTOTUNE))
+
+    return parsed_data
+
+    
