@@ -17,7 +17,44 @@ stages:
       - params.yaml
       - artifacts/data_ingestion/test
       - artifacts/data_ingestion/train
-
+    params:
+      - RANDOM_ROTATION_LEFT_FACTOR
+      - RANDOM_ROTATION_RIGHT_FACTOR
+      - RANDOM_FLIP_MODE
+      - RANDOM_CONTRAST_FACTOR
+      - TRAIN_NUM_SHARDS
+      - TEST_NUM_SHARDS
+      - SHUFFLE
+      - IMAGE_SIZE
+      - BATCH_SIZE
     outs:
       - artifacts/data_preprocessing/train_tfrecords
       - artifacts/data_preprocessing/test_tfrecords
+
+  model_training:
+    cmd: python src/Emotion_Detector/pipeline/stage03_model_training.py
+    deps: 
+      - src/Emotion_Detector/pipeline/stage03_model_training.py
+      - configs/config.yaml
+      - params.yaml
+      - artifacts/data_preprocessing/train_tfrecords
+      - artifacts/data_preprocessing/test_tfrecords
+    params:
+      - BATCH_SIZE
+      - IMAGE_SIZE
+      - LEARNING_RATE
+      - EPOCHS
+      - DROPOUT_RATE
+      - REGULARIZATION_RATE
+      - N_FILTERS
+      - KERNAL_SIZE
+      - N_STRIDES
+      - POOL_SIZE
+      - N_DENSE_1
+      - N_DENSE_2
+      - NUM_CLASSES
+    outs:
+      - artifacts/model_training/model_callbacks
+      - artifacts/model_training/tensorboard_log_dir
+      - artifacts/model_training/model_history
+      - artifacts/model_training/model
