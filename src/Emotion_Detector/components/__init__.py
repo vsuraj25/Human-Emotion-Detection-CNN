@@ -1,2 +1,3 @@
 from Emotion_Detector.components.data_ingestion import DataIngestion
 from Emotion_Detector.components.data_preprocessing import Data_Preprocessing
+from Emotion_Detector.components.model_training import Model_Training
