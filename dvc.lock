@@ -36,8 +36,8 @@ stages:
       md5: cb886a613ed18fa9b6070312bb18b7a6
       size: 1552
     - path: params.yaml
-      md5: 913494cb2f0b1357ced9b573ba46a427
-      size: 532
+      md5: e39de1fa36c1723d84a3836a3810a2f1
+      size: 667
     - path: src/Emotion_Detector/pipeline/stage02_data_preprocessing.py
       md5: 750d1b00c8c1b8f0417f6e3fff919916
       size: 754
@@ -45,39 +45,43 @@ stages:
       params.yaml:
         BATCH_SIZE: 32
         IMAGE_SIZE: 256
+        RANDOMTRANSLATION_HEIGHT_FACTOR: 0.1
+        RANDOMTRANSLATION_WIDTH_FACTOR: 0.1
+        RANDOM_BRIGHTNESS_FACTOR: 0.2
         RANDOM_CONTRAST_FACTOR: 0.1
         RANDOM_FLIP_MODE: horizontal
         RANDOM_ROTATION_LEFT_FACTOR: -0.025
         RANDOM_ROTATION_RIGHT_FACTOR: 0.025
+        RANDOM_ZOOM_FACTOR: 0.2
         SHUFFLE: true
         TEST_NUM_SHARDS: 5
         TRAIN_NUM_SHARDS: 10
     outs:
     - path: artifacts/data_preprocessing/test_tfrecords
-      md5: 38ee819c6f3cdfe7c7201e24a6bad747.dir
+      md5: e07c08216a8356aaa3f14665067fb4df.dir
       size: 472863362
       nfiles: 5
     - path: artifacts/data_preprocessing/train_tfrecords
-      md5: dd4d67d9388a9de238e8bee72f127e58.dir
-      size: 1884176960
+      md5: 465199198bb0c5983d6e2ba6e9f8d56a.dir
+      size: 1814128684
       nfiles: 10
   model_training:
     cmd: python src/Emotion_Detector/pipeline/stage03_model_training.py
     deps:
     - path: artifacts/data_preprocessing/test_tfrecords
-      md5: 38ee819c6f3cdfe7c7201e24a6bad747.dir
+      md5: e07c08216a8356aaa3f14665067fb4df.dir
       size: 472863362
       nfiles: 5
     - path: artifacts/data_preprocessing/train_tfrecords
-      md5: dd4d67d9388a9de238e8bee72f127e58.dir
-      size: 1884176960
+      md5: 465199198bb0c5983d6e2ba6e9f8d56a.dir
+      size: 1814128684
       nfiles: 10
     - path: configs/config.yaml
       md5: cb886a613ed18fa9b6070312bb18b7a6
       size: 1552
     - path: params.yaml
-      md5: 913494cb2f0b1357ced9b573ba46a427
-      size: 532
+      md5: e39de1fa36c1723d84a3836a3810a2f1
+      size: 667
     - path: src/Emotion_Detector/pipeline/stage03_model_training.py
       md5: 463ea03b8d5b2f328430e7df9ae2418b
       size: 695
@@ -98,18 +102,18 @@ stages:
         REGULARIZATION_RATE: 0.0
     outs:
     - path: artifacts/model_training/model
-      md5: e8137b29f51368fcf521028850d56f57.dir
+      md5: 1b6ae93f6a2243b2135a16f1cf200822.dir
       size: 74267464
       nfiles: 4
     - path: artifacts/model_training/model_callbacks
-      md5: b3192f930aa5854912e9924b30020f01.dir
+      md5: f9fe0389d40a3740a2363fc76006afb1.dir
       size: 73848884
       nfiles: 3
     - path: artifacts/model_training/model_history
-      md5: 576c5148dd7c0e4b8939221dc060eb57.dir
-      size: 2434
+      md5: 309bdc85b4d6da6364628ca68c3f0eca.dir
+      size: 2433
       nfiles: 1
     - path: artifacts/model_training/tensorboard_log_dir
-      md5: 6787fb5adc44839f6f8d5920751acbdb.dir
+      md5: da0417967ec7e55b865cd58a82d752a2.dir
       size: 550869
       nfiles: 2

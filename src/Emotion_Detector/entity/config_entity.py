@@ -31,6 +31,10 @@ class DataPreprocessingConfig:
     param_random_rotation_right_factor: float
     param_random_flip_mode: str
     param_random_contrast_factor: float
+    param_random_translation_height_factor: float
+    param_random_translation_width_factor: float
+    param_random_zoom_factor: float
+    param_random_brightness_factor: float
 
 @dataclass(frozen=True)
 class ModelTrainingConfig:

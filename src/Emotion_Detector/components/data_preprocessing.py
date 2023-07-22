@@ -1,7 +1,7 @@
 from Emotion_Detector.entity.config_entity import DataPreprocessingConfig
 from Emotion_Detector.utils import *
 import tensorflow as tf
-from tensorflow.keras.layers import RandomFlip, RandomRotation,RandomContrast
+from tensorflow.keras.layers import RandomFlip, RandomRotation,RandomContrast,RandomTranslation, RandomZoom, RandomBrightness
 
 class Data_Preprocessing:
     def __init__(self, config: DataPreprocessingConfig):
@@ -42,7 +42,10 @@ class Data_Preprocessing:
             augment_layers = tf.keras.Sequential([
                 RandomRotation(factor = (self.config.param_random_rotation_left_factor, self.config.param_random_rotation_right_factor)),
                 RandomFlip(mode = self.config.param_random_flip_mode),
-                RandomContrast(factor = self.config.param_random_contrast_factor)
+                RandomContrast(factor = self.config.param_random_contrast_factor),
+                RandomTranslation(height_factor = self.config.param_random_translation_height_factor, width_factor =  self.config.param_random_translation_width_factor),
+                RandomZoom(self.config.param_random_zoom_factor),
+                RandomBrightness(self.config.param_random_brightness_factor)
             ])
 
             def augment_layer(image, label):

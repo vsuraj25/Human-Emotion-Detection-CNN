@@ -54,7 +54,11 @@ class ConfigurationManager:
             param_random_rotation_left_factor = self.params.RANDOM_ROTATION_LEFT_FACTOR,
             param_random_rotation_right_factor = self.params.RANDOM_ROTATION_RIGHT_FACTOR,
             param_random_flip_mode = self.params.RANDOM_FLIP_MODE,
-            param_random_contrast_factor = self.params.RANDOM_CONTRAST_FACTOR
+            param_random_contrast_factor = self.params.RANDOM_CONTRAST_FACTOR,
+            param_random_translation_height_factor = self.params.RANDOMTRANSLATION_HEIGHT_FACTOR,
+            param_random_translation_width_factor = self.params.RANDOMTRANSLATION_WIDTH_FACTOR,
+            param_random_zoom_factor = self.params.RANDOM_ZOOM_FACTOR,
+            param_random_brightness_factor = self.params.RANDOM_BRIGHTNESS_FACTOR
         )
         return data_preprocessing_config
     
