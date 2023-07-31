@@ -1,5 +1,5 @@
-from tensorflow.keras.losses import SparseCategoricalCrossentropy
-from tensorflow.keras.metrics import SparseCategoricalAccuracy
+from tensorflow.keras.losses import CategoricalCrossentropy
+from tensorflow.keras.metrics import CategoricalAccuracy
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 from Emotion_Detector.utils import *
@@ -11,12 +11,10 @@ class Model_Training:
         self.config = config
 
     def _get_data(self):
-        train_data = reconstruct_data_from_tfrecords(path = self.config.train_tf_records_file_path,
-                                                    num_shards= self.config.param_train_num_shards, 
-                                                    batch_size = self.config.param_batch_size )
-        val_data = reconstruct_data_from_tfrecords(path = self.config.test_tf_records_file_path,
-                                                    num_shards= self.config.param_test_num_shards, 
-                                                    batch_size = self.config.param_batch_size )
+        train_data, val_data = get_augmented_data(train_dir_path= self.config.train_dir,
+                                                  val_dir_path= self.config.val_dir,
+                                                  params= self.config.all_params
+                                                  )
         return train_data, val_data
         
     def _get_model(self):
@@ -48,8 +46,8 @@ class Model_Training:
         tensorboard_callback = TensorBoard(log_dir=self.config.tensorboard_log_dir, histogram_freq=1)
 
 
-        loss_function = SparseCategoricalCrossentropy()
-        metrics = [SparseCategoricalAccuracy(name = "accuracy")]
+        loss_function = CategoricalCrossentropy()
+        metrics = [CategoricalAccuracy(name = "accuracy")]
 
         logger.info(f"Compiling the model...")
         model.compile(
@@ -70,3 +68,22 @@ class Model_Training:
         logger.info(f"Saving the model history at {self.config.model_history_file_path}...")
         save_json(path = self.config.model_history_file_path, data = history.history)
         logger.info(f"Model history successfully saved at {self.config.model_history_file_path}.")
+
+        logger.info(f"Saving the model accuracy plot at {self.config.model_accuracy_plot_path}...")
+        save_plt_fig(x = history.history['accuracy'],
+                     y = history.history['val_accuracy'],
+                     title = "Model Accuracy",
+                     xlabel ='Epochs',
+                     ylabel = "Accuracy",
+                     legends= ['Train', 'Validation'],
+                     fig_path = self.config.model_accuracy_plot_path)
+        
+        logger.info(f"Saving the model loss plot at {self.config.model_loss_plot_path}...")
+        save_plt_fig(x = history.history['loss'],
+                     y = history.history['val_loss'],
+                     title = "Model loss",
+                     xlabel ='Epochs',
+                     ylabel = "Loss",
+                     legends= ['Train', 'Validation'],
+                     fig_path = self.config.model_loss_plot_path)
+        logger.info(f"Model results saved successfully.")

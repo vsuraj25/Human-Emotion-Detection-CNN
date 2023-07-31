@@ -42,10 +42,9 @@ class Data_Preprocessing:
             augment_layers = tf.keras.Sequential([
                 RandomRotation(factor = (self.config.param_random_rotation_left_factor, self.config.param_random_rotation_right_factor)),
                 RandomFlip(mode = self.config.param_random_flip_mode),
-                RandomContrast(factor = self.config.param_random_contrast_factor),
-                RandomTranslation(height_factor = self.config.param_random_translation_height_factor, width_factor =  self.config.param_random_translation_width_factor),
+                RandomTranslation(height_factor = (self.config.param_random_translation_height_left_factor,self.config.param_random_translation_height_left_factor),
+                                    width_factor =  (self.config.param_random_translation_width_left_factor,self.config.param_random_translation_width_right_factor)),
                 RandomZoom(self.config.param_random_zoom_factor),
-                RandomBrightness(self.config.param_random_brightness_factor)
             ])
 
             def augment_layer(image, label):

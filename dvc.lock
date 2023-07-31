@@ -4,8 +4,8 @@ stages:
     cmd: python src/Emotion_Detector/pipeline/stage01_data_ingestion.py
     deps:
     - path: configs/config.yaml
-      md5: cb886a613ed18fa9b6070312bb18b7a6
-      size: 1552
+      md5: 23318861e3c75bccb53c2c315ca8f4e2
+      size: 1749
     - path: src/Emotion_Detector/pipeline/stage01_data_ingestion.py
       md5: 439da56c76bd08da5179a9a7bc86a67b
       size: 739
@@ -33,11 +33,11 @@ stages:
       size: 45185869
       nfiles: 28709
     - path: configs/config.yaml
-      md5: cb886a613ed18fa9b6070312bb18b7a6
-      size: 1552
+      md5: f7c7027a81e03e5ec36cc49fce74767c
+      size: 1794
     - path: params.yaml
-      md5: e39de1fa36c1723d84a3836a3810a2f1
-      size: 667
+      md5: 4010bdd234051e73100ee22b5a3642f4
+      size: 706
     - path: src/Emotion_Detector/pipeline/stage02_data_preprocessing.py
       md5: 750d1b00c8c1b8f0417f6e3fff919916
       size: 754
@@ -45,10 +45,9 @@ stages:
       params.yaml:
         BATCH_SIZE: 32
         IMAGE_SIZE: 256
-        RANDOMTRANSLATION_HEIGHT_FACTOR: 0.1
-        RANDOMTRANSLATION_WIDTH_FACTOR: 0.1
-        RANDOM_BRIGHTNESS_FACTOR: 0.2
-        RANDOM_CONTRAST_FACTOR: 0.1
+        RANDOMTRANSLATION_HEIGHT_FACTOR_LEFT: -0.1
+        RANDOMTRANSLATION_HEIGHT_FACTOR_RIGHT: 0.1
+        RANDOMTRANSLATION_WIDTH_FACTOR_LEFT: -0.1
         RANDOM_FLIP_MODE: horizontal
         RANDOM_ROTATION_LEFT_FACTOR: -0.025
         RANDOM_ROTATION_RIGHT_FACTOR: 0.025
@@ -58,12 +57,12 @@ stages:
         TRAIN_NUM_SHARDS: 10
     outs:
     - path: artifacts/data_preprocessing/test_tfrecords
-      md5: e07c08216a8356aaa3f14665067fb4df.dir
+      md5: e996748f9e132ab9d10735b71712a8fa.dir
       size: 472863362
       nfiles: 5
     - path: artifacts/data_preprocessing/train_tfrecords
-      md5: 465199198bb0c5983d6e2ba6e9f8d56a.dir
-      size: 1814128684
+      md5: 2035c48cf43fae91142725e439a0b2ad.dir
+      size: 1894368280
       nfiles: 10
   model_training:
     cmd: python src/Emotion_Detector/pipeline/stage03_model_training.py

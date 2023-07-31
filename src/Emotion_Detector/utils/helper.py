@@ -9,7 +9,10 @@ from box import ConfigBox
 from pathlib import Path
 from typing import Any
 import tensorflow as tf
+import matplotlib.pyplot as plt
 from tensorflow.train import BytesList, FloatList, Int64List, Example, Features, Feature
+from tensorflow.keras.layers import (RandomFlip, RandomRotation,
+                                     RandomContrast,RandomTranslation, RandomZoom,  Resizing,RandomBrightness)
 
 
 @ensure_annotations
@@ -168,5 +171,63 @@ def reconstruct_data_from_tfrecords(path, num_shards, batch_size):
     parsed_data = (recons_data.map(parse_tfrecords).batch(batch_size).prefetch(tf.data.AUTOTUNE))
 
     return parsed_data
+
+def save_plt_fig(x, y, title , xlabel, ylabel, legends, fig_path):
+    plt.plot(x)
+    plt.plot(y)
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.legend(legends)
+    plt.savefig(fig_path)
+    
+
+def get_augmented_data(train_dir_path, val_dir_path, params):
+
+    def augment_layer(image, label):
+        return augment_layers(image, training = True), label
+
+    train_data = tf.keras.utils.image_dataset_from_directory(
+    train_dir_path,
+    labels='inferred', ## consider file as class
+    label_mode='categorical', ## factorized classes
+    class_names=params['CLASS_NAMES'], ## Defined class name as per subdirectories
+    color_mode='rgb',
+    batch_size=params['BATCH_SIZE'],
+    image_size=(params['IMAGE_SIZE'], params['IMAGE_SIZE']),
+    shuffle=True,
+    seed=22)
+
+    val_data = tf.keras.utils.image_dataset_from_directory(
+    val_dir_path,
+    labels='inferred', ## consider file as class
+    label_mode='categorical', ## factorized classes
+    class_names=params['CLASS_NAMES'], ## Defined class name as per subdirectories
+    color_mode='rgb',
+    batch_size=params['BATCH_SIZE'],
+    image_size=(params['IMAGE_SIZE'], params['IMAGE_SIZE']),
+    shuffle=True,
+    seed=22)
+
+    augment_layers = tf.keras.Sequential([
+        RandomRotation(factor = (-0.025, 0.025)),
+        RandomFlip(mode = 'horizontal'),
+        RandomContrast(factor = 0.1),
+        RandomTranslation(0.1, 0.1),
+        RandomZoom(0.2),
+        RandomBrightness(0.2)
+        ])
+    
+    train_data = (
+        train_data.map(augment_layer, num_parallel_calls=tf.data.AUTOTUNE).prefetch(tf.data.AUTOTUNE)
+    )
+
+    val_data = (
+        val_data.prefetch(tf.data.AUTOTUNE)
+    )
+
+    return train_data, val_data
+
+    
 
     

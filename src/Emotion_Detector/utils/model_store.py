@@ -111,65 +111,56 @@ class ResidualBlock(Layer):
     else:
       x_add = Add()([x, input])
 
-    return self.activation(x_add)
+    return self.activation(x_add)       
 
+  
+class ResNet18(Model):
+    def __init__(self):
+        super(ResNet18, self).__init__(name='resnet_18')
 
-    
-class ResNet34(Model):
-  def __init__(self,):
-    super(ResNet34, self).__init__(name = 'resnet_34')
-    
-    self.conv_1 = CustomConv2D(64, 7, 2, padding = 'same')
-    self.max_pool = MaxPooling2D(3,2)
-    
-    self.conv_2_1 = ResidualBlock(64)
-    self.conv_2_2 = ResidualBlock(64)
-    self.conv_2_3 = ResidualBlock(64)
-    
-    self.conv_3_1 = ResidualBlock(128, 2)
-    self.conv_3_2 = ResidualBlock(128)
-    self.conv_3_3 = ResidualBlock(128)
-    self.conv_3_4 = ResidualBlock(128)
+        self.resize = Resizing(256, 256)
 
-    self.conv_4_1 = ResidualBlock(256, 2)
-    self.conv_4_2 = ResidualBlock(256)
-    self.conv_4_3 = ResidualBlock(256)
-    self.conv_4_4 = ResidualBlock(256)
-    self.conv_4_5 = ResidualBlock(256)
-    self.conv_4_6 = ResidualBlock(256)
-    
-    self.conv_5_1 = ResidualBlock(512, 2)
-    self.conv_5_2 = ResidualBlock(512)
-    self.conv_5_3 = ResidualBlock(512)
+        self.rescale = Rescaling(1./255)
 
-    self.global_pool = GlobalAveragePooling2D()
+        self.conv_1 = CustomConv2D(64, 7, 2, padding='same')
+        self.max_pool = MaxPooling2D(3, 2)
 
-    self.fc_3 = Dense(7, activation = 'softmax')
-    
-  def call(self, x, training = True):
-    x = self.conv_1(x)
-    x = self.max_pool(x)
+        self.conv_2_1 = ResidualBlock(64)
+        self.conv_2_2 = ResidualBlock(64)
 
-    x = self.conv_2_1(x, training)
-    x = self.conv_2_2(x, training)
-    x = self.conv_2_3(x, training)
-    
-    x = self.conv_3_1(x, training)
-    x = self.conv_3_2(x, training)
-    x = self.conv_3_3(x, training)
-    x = self.conv_3_4(x, training)
-    
-    x = self.conv_4_1(x, training)
-    x = self.conv_4_2(x, training)
-    x = self.conv_4_3(x, training)
-    x = self.conv_4_4(x, training)
-    x = self.conv_4_5(x, training)
-    x = self.conv_4_6(x, training)
-    
-    x = self.conv_5_1(x, training)
-    x = self.conv_5_2(x, training)
-    x = self.conv_5_3(x, training)
+        self.conv_3_1 = ResidualBlock(128, 2)
+        self.conv_3_2 = ResidualBlock(128)
 
-    x = self.global_pool(x)
-    
-    return self.fc_3(x)
+        self.conv_4_1 = ResidualBlock(256, 2)
+        self.conv_4_2 = ResidualBlock(256)
+
+        self.conv_5_1 = ResidualBlock(512, 2)
+        self.conv_5_2 = ResidualBlock(512)
+
+        self.global_pool = GlobalAveragePooling2D()
+
+        self.fc_3 = Dense(7, activation='softmax', kernel_regularizer=L2(0.01))
+
+    def call(self, x, training=True):
+        
+        x = self.resize(x)
+        x = self.rescale(x)
+
+        x = self.conv_1(x)
+        x = self.max_pool(x)
+
+        x = self.conv_2_1(x, training)
+        x = self.conv_2_2(x, training)
+
+        x = self.conv_3_1(x, training)
+        x = self.conv_3_2(x, training)
+
+        x = self.conv_4_1(x, training)
+        x = self.conv_4_2(x, training)
+
+        x = self.conv_5_1(x, training)
+        x = self.conv_5_2(x, training)
+
+        x = self.global_pool(x)
+
+        return self.fc_3(x)

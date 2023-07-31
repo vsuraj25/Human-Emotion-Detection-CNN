@@ -1,3 +1,5 @@
 from Emotion_Detector.components.data_ingestion import DataIngestion
 from Emotion_Detector.components.data_preprocessing import Data_Preprocessing
 from Emotion_Detector.components.model_training import Model_Training
+from Emotion_Detector.components.resnet_model_training import Resnet_Model_Training
+from Emotion_Detector.components.pretrained_model_training import Pretrained_Model_Training

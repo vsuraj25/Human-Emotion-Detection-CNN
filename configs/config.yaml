@@ -23,7 +23,43 @@ model_training:
   model_history_dir : artifacts/model_training/model_history
   model_dir : artifacts/model_training/model
   model_file_path : artifacts/model_training/model.h5
-  checkpoints_file_path: artifacts/model_training/model_callbacks/model_{epoch:02d}.ckpt
+  checkpoints_file_path: artifacts/model_training/model_checkpoints/model_{epoch:02d}.ckpt
   model_history_file_path :  artifacts/model_training/model_history/history.json
-  train_tf_records_file_path: 'artifacts/data_preprocessing/train_tfrecords/shard_{:02d}.tfrecord'
-  test_tf_records_file_path: 'artifacts/data_preprocessing/test_tfrecords/shard_{:02d}.tfrecord'
+  model_accuracy_plot_path :  artifacts/model_training/model_history/accuracy.png
+  model_loss_plot_path :  artifacts/model_training/model_history/loss.png
+  model_history_file_path :  artifacts/model_training/model_history/history.json
+  model_best_weights_dir : artifacts/model_training/best_weights
+  train_dir: artifacts/data_ingestion/train
+  val_dir: artifacts/data_ingestion/test
+
+resnet_model_training:
+  root_dir: artifacts/resnet_model_training
+  checkpoints_callback_dir: artifacts/resnet_model_training/model_checkpoints
+  tensorboard_log_dir: artifacts/resnet_model_training/tensorboard_log_dir
+  model_history_dir : artifacts/resnet_model_training/model_history
+  model_dir : artifacts/resnet_model_training/model
+  model_file_path : artifacts/resnet_model_training/model.h5
+  checkpoints_file_path: artifacts/resnet_model_training/model_checkpoints/model_{epoch:02d}.ckpt
+  model_history_file_path :  artifacts/resnet_model_training/model_history/history.json
+  model_accuracy_plot_path :  artifacts/resnet_model_training/model_history/accuracy.png
+  model_loss_plot_path :  artifacts/resnet_model_training/model_history/loss.png
+  model_history_file_path :  artifacts/resnet_model_training/model_history/history.json
+  model_best_weights_dir : artifacts/resnet_model_training/best_weights
+  train_dir: artifacts/data_ingestion/train
+  val_dir: artifacts/data_ingestion/test
+
+pretrained_model_training:
+  root_dir: artifacts/pretrained_model_training
+  checkpoints_callback_dir: artifacts/pretrained_model_training/model_checkpoints
+  tensorboard_log_dir: artifacts/pretrained_model_training/tensorboard_log_dir
+  model_history_dir : artifacts/pretrained_model_training/model_history
+  model_dir : artifacts/pretrained_model_training/model
+  model_file_path : artifacts/pretrained_model_training/model.h5
+  checkpoints_file_path: artifacts/pretrained_model_training/model_checkpoints/model_{epoch:02d}.ckpt
+  model_history_file_path :  artifacts/pretrained_model_training/model_history/history.json
+  model_accuracy_plot_path :  artifacts/pretrained_model_training/model_history/accuracy.png
+  model_loss_plot_path :  artifacts/pretrained_model_training/model_history/loss.png
+  model_history_file_path :  artifacts/pretrained_model_training/model_history/history.json
+  model_best_weights_dir : artifacts/pretrained_model_training/best_weights
+  train_dir: artifacts/data_ingestion/train
+  val_dir: artifacts/data_ingestion/test

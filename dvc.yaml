@@ -9,31 +9,31 @@ stages:
       - artifacts/data_ingestion/train
       - artifacts/data_ingestion/raw_data/data.zip
 
-  data_preprocessing:
-    cmd: python src/Emotion_Detector/pipeline/stage02_data_preprocessing.py
-    deps: 
-      - src/Emotion_Detector/pipeline/stage02_data_preprocessing.py
-      - configs/config.yaml
-      - params.yaml
-      - artifacts/data_ingestion/test
-      - artifacts/data_ingestion/train
-    params:
-      - RANDOM_ROTATION_LEFT_FACTOR
-      - RANDOM_ROTATION_RIGHT_FACTOR
-      - RANDOM_FLIP_MODE
-      - RANDOM_CONTRAST_FACTOR
-      - RANDOMTRANSLATION_HEIGHT_FACTOR
-      - RANDOMTRANSLATION_WIDTH_FACTOR
-      - RANDOM_ZOOM_FACTOR
-      - RANDOM_BRIGHTNESS_FACTOR
-      - TRAIN_NUM_SHARDS
-      - TEST_NUM_SHARDS
-      - SHUFFLE
-      - IMAGE_SIZE
-      - BATCH_SIZE
-    outs:
-      - artifacts/data_preprocessing/train_tfrecords
-      - artifacts/data_preprocessing/test_tfrecords
+  # data_preprocessing:
+  #   cmd: python src/Emotion_Detector/pipeline/stage02_data_preprocessing.py
+  #   deps: 
+  #     - src/Emotion_Detector/pipeline/stage02_data_preprocessing.py
+  #     - configs/config.yaml
+  #     - params.yaml
+  #     - artifacts/data_ingestion/test
+  #     - artifacts/data_ingestion/train
+  #   params:
+  #     - RANDOM_ROTATION_LEFT_FACTOR
+  #     - RANDOM_ROTATION_RIGHT_FACTOR
+  #     - RANDOM_FLIP_MODE
+  #     - RANDOMTRANSLATION_HEIGHT_FACTOR_LEFT
+  #     - RANDOMTRANSLATION_HEIGHT_FACTOR_RIGHT
+  #     - RANDOMTRANSLATION_WIDTH_FACTOR_LEFT
+  #     - RANDOMTRANSLATION_WIDTH_FACTOR_LEFT
+  #     - RANDOM_ZOOM_FACTOR
+  #     - TRAIN_NUM_SHARDS
+  #     - TEST_NUM_SHARDS
+  #     - SHUFFLE
+  #     - IMAGE_SIZE
+  #     - BATCH_SIZE
+  #   outs:
+  #     - artifacts/data_preprocessing/train_tfrecords
+  #     - artifacts/data_preprocessing/test_tfrecords
 
   model_training:
     cmd: python src/Emotion_Detector/pipeline/stage03_model_training.py
@@ -41,8 +41,8 @@ stages:
       - src/Emotion_Detector/pipeline/stage03_model_training.py
       - configs/config.yaml
       - params.yaml
-      - artifacts/data_preprocessing/train_tfrecords
-      - artifacts/data_preprocessing/test_tfrecords
+      - artifacts/data_ingestion/train
+      - artifacts/data_ingestion/test
     params:
       - BATCH_SIZE
       - IMAGE_SIZE
@@ -58,7 +58,47 @@ stages:
       - N_DENSE_2
       - NUM_CLASSES
     outs:
-      - artifacts/model_training/model_callbacks
+      - artifacts/model_training/model_checkpoints
       - artifacts/model_training/tensorboard_log_dir
       - artifacts/model_training/model_history
       - artifacts/model_training/model
+
+  resnet_model_training:
+    cmd: python src/Emotion_Detector/pipeline/stage04_resnet_model_training.py
+    deps: 
+      - src/Emotion_Detector/pipeline/stage04_resnet_model_training.py
+      - configs/config.yaml
+      - params.yaml
+      - artifacts/data_ingestion/train
+      - artifacts/data_ingestion/test
+    params:
+      - RESNET_TRAIN_BATCH
+      - IMAGE_SIZE
+      - RESNET_EPOCH
+
+    outs:
+      - artifacts/resnet_model_training/model_checkpoints
+      - artifacts/resnet_model_training/tensorboard_log_dir
+      - artifacts/resnet_model_training/model_history
+      - artifacts/resnet_model_training/model
+
+  pretrained_model_training:
+    cmd: python src/Emotion_Detector/pipeline/stage05_pretrained_model_training.py
+    deps: 
+      - src/Emotion_Detector/pipeline/stage05_pretrained_model_training.py
+      - configs/config.yaml
+      - params.yaml
+      - artifacts/data_ingestion/train
+      - artifacts/data_ingestion/test
+    params:
+      - EN_DENSE_1
+      - EN_DENSE_2
+      - INCLUDE_TOP
+      - EN_EPOCH
+      - EN_BATCH_SIZE
+
+    outs:
+      - artifacts/pretrained_model_training/model_checkpoints
+      - artifacts/pretrained_model_training/tensorboard_log_dir
+      - artifacts/pretrained_model_training/model_history
+      - artifacts/pretrained_model_training/model
